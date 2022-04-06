@@ -87,9 +87,9 @@ console.log(division(2, 6));//выводит 0,333333
 function declinationOfNumber(count, one, two, five) {
     let units = count % 10;
     let tens = count % 100;
-    if (units == 1 && tens != 11) {
+    if (units === 1 && tens !== 11) {
         return (count +' '+ one);
-    } else if ((units > 1 && units < 5) && (tens != 12 && tens != 13 && tens != 14)){
+    } else if ((units > 1 && units < 5) && (tens !== 12 && tens !== 13 && tens !== 14)){
         return (count +' '+ two);
     } else {
         return (count +' '+ five);
