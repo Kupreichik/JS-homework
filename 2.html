@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!--
+Дополнительное задание.
+
+Дан макет сайта
+https://www.figma.com/file/SbfOi2i4S1pIs0G6uOLPCx/shop-(Copy)?node-id=73%3A140м 
+
+В нем представлены товары, добавленные в корзину 
+
+Вам необходимо создать объект cart  в котором будет 
+1. ссылка на картинку
+2. Название товара (MANGO  PEOPLE  T-SHIRT)
+3. цена (Price: $300 	) 
+4. цвет (Color: Red)
+5. Размер (Size: Xl	)
+6. Количество (Quantity:2)
+
+Отобразить на странице 2 товара добавленных в корзину
+-->
+<div class="title">
+    <div class="container">
+        <h1>SHOPPING CART</h1>
+    </div>
+</div>
+<div class="catrMain container">
+    <div class="cartBlock">
+        <div class="cartContents">
+            <div class="emptyCart hidden">В вашей корзине пусто</div>
+        </div>
+        <div class="cartBtnS">
+            <button>Clear shopping cart</button>
+            <button>Continue shopping</button>
+        </div>
+    </div>
+    <div class="orderingBlock">
+        <div class="totalPrice">
+            <div class="subTotal">SUB TOTAL
+                <span></span>
+            </div>
+            <div class="grandTotal">GRAND TOTAL
+                <span></span>
+            </div>
+            <hr>
+            <button>PROCEED TO CHECKOUT</button>
+        </div>
+    </div>
+</div>
+    <script>
+        "use strict";
+        const cart = [{
+            id: 1,
+            imgSrc: 'img/3.jpg',
+            productName: 'MANGO  PEOPLE  T-SHIRT',
+            price: 200,
+            color: 'Blue',
+            size: 'Xl',
+            quantiti: 2
+        },{
+            id: 2,
+            imgSrc: 'img/1-2.jpg',
+            productName: 'MANGO  PEOPLE  T-SHIRT',
+            price: 300,
+            color: 'Red',
+            size: 'Xl',
+            quantiti: 1
+        }];
+        const cartContain = document.querySelector('.cartContents');
+
+        function createCartProduct (productData) {
+            const productWrap = document.createElement('div');
+            productWrap.classList.add('b-productInCart');
+
+            const productImg = document.createElement('img');
+            productImg.classList.add('b-productInCart__img', 'b-productInCart__img_width');
+            productImg.src = productData.imgSrc;
+            productWrap.append(productImg);
+
+            const productText = document.createElement('div');
+            productText.classList.add('b-productInCart__description', 'b-productInCart__description_size', 'b-productInCart__description_color');
+            productWrap.append(productText);
+
+            const productName = document.createElement('div');
+            productName.classList.add('b-productInCart__name', 'b-productInCart__name_size', 'b-productInCart__name_color');
+            productName.textContent = productData.productName;
+            productText.append(productName);
+
+            const productPrice = document.createElement('div');
+            productPrice.classList.add('b-productInCart__price');
+            productPrice.textContent = 'Price: ';
+            productText.append(productPrice);
+
+            const productPriceSpan = document.createElement('span');
+            productPriceSpan.classList.add('b-productInCart__price_pink');
+            productPriceSpan.textContent = `$ ${productData.price}`;
+            productPrice.append(productPriceSpan);
+
+            const productColor = document.createElement('div');
+            productColor.classList.add('b-productInCart__color');
+            productColor.textContent = `Color: ${productData.color}`;
+            productText.append(productColor);
+
+            const productSize = document.createElement('div');
+            productSize.classList.add('b-productInCart__size');
+            productSize.textContent = `Size: ${productData.size}`;
+            productText.append(productSize);
+
+            const productQuantiti = document.createElement('div');
+            productQuantiti.classList.add('b-productInCart__quantity');
+            productQuantiti.textContent = 'Quantity: ';
+            productText.append(productQuantiti);
+
+            const quantiti = document.createElement('input');
+            quantiti.classList.add('b-productInCart__input', 'b-productInCart__input_size');
+            quantiti.type = 'number';
+            quantiti.value = productData.quantiti;
+            productQuantiti.append(quantiti);
+
+            const dellButton = document.createElement('img');
+            dellButton.classList.add('b-productInCart__closeBtn', 'b-productInCart__closeBtn_size');
+            dellButton.src = 'img/close.svg';
+            productWrap.append(dellButton);
+
+            return productWrap;
+        }
+
+        cart.forEach(element => {
+            cartContain.append(createCartProduct(element))
+        });
+
+    //дальше мои эксперименты с кнопками суммой заказа
+    //общая стоимость товаров в корзине
+        let subTotal;
+        let discount = 0; //допустим, если будет какая-то персональная скидка
+        
+        function subTotalSum() {
+            subTotal = 0;
+            document.querySelectorAll('.b-productInCart').forEach(productEl => {
+                let price = +productEl.querySelector('.b-productInCart__price_pink').textContent.slice(2);
+                let quantiti = productEl.querySelector('.b-productInCart__input').value;
+                subTotal += (price * quantiti);
+            })
+            
+            document.querySelector('.subTotal').firstElementChild.innerHTML = `$ ${subTotal}`;
+            return subTotal;
+        };
+
+        function grandTotalSum() {
+            let grandTotal = 0;
+            grandTotal = (subTotal - (subTotal * discount)).toFixed(2);
+            document.querySelector('.grandTotal').firstElementChild.innerHTML = `$ ${grandTotal}`;
+        };
+
+        subTotalSum();
+        grandTotalSum();
+
+        document.body.addEventListener('change', event => {
+            if (event.target.classList.contains('b-productInCart__input')) {
+                subTotalSum();
+                grandTotalSum();
+            };
+        });
+
+        //крестик удаляющий продукт из корзины
+        document.body.addEventListener('click', event => {
+            if (event.target.classList.contains('b-productInCart__closeBtn')) {
+                event.target.parentElement.remove();
+                if (document.querySelector('.b-productInCart') === null) {
+                    document.querySelector('.emptyCart').classList.remove('hidden');
+                }
+                subTotalSum();
+                grandTotalSum();
+            }
+        });
+
+        //кнопка очистить корзину
+        document.body.addEventListener('click', event => {
+            if (event.target.innerHTML === 'Clear shopping cart') {
+                document.querySelectorAll('.b-productInCart').forEach(
+                    element => element.remove());
+                document.querySelector('.emptyCart').classList.remove('hidden');
+                subTotalSum();
+                grandTotalSum();
+            }
+        });
+    </script>
+</body>
+
+</html>
