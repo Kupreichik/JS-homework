@@ -1,13 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-    Какой-то текст, кнопки и всё-такое...
-    <script src="main.js"></script>
+    <button class="button">click1</button>
+    <button class="button">click2</button>
+    <script>
+        function counter() {
+            let count = 1;
+            const upCount = () => {
+                return count++;
+            };
+
+            return upCount;
+        }
+        const result1 = counter();
+        const result2 = counter();
+        const buttonEl = document.querySelectorAll(".button");
+        buttonEl[0].addEventListener("click", (e) => {
+                console.log(`Кликов по кнопке ${buttonEl[0].textContent} = ${result1()}`);
+            });
+        buttonEl[1].addEventListener("click", (e) => {
+            console.log(`Кликов по кнопке ${buttonEl[1].textContent} = ${result2()}`);
+        });
+    </script>
 </body>
+
 </html>
